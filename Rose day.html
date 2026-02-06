@@ -1,0 +1,271 @@
+<meta name='viewport' content='width=device-width, initial-scale=1'/><!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🌹 Rose Day Garden</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  font-family: 'Dancing Script', cursive;
+  font-weight: 500;
+  font-size:20px;
+  color: #C71585;
+
+  /* 💗 Base pink background */
+  background: linear-gradient(
+    180deg,
+    #ffd6e8 0%,
+    #ffb6d5 45%,
+    #ff9ac7 100%
+  );
+}
+
+/* ===== HERO IMAGE ===== */
+.hero-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding-top: 20px;
+}
+
+.hero-image {
+  width: 90%;
+  max-width: 420px;
+  aspect-ratio: 3 / 4;
+  background-image: url("https://raw.githubusercontent.com/piyushshahu123456789/Assets/main/panda.webp");
+  background-size: cover;
+  background-position: center;
+  border-radius: 28px;
+
+  box-shadow:
+    0 20px 40px rgba(255, 77, 109, 0.35),
+    0 8px 18px rgba(0,0,0,0.25);
+
+  animation: fadeUp 1.2s ease forwards;
+}
+
+/* ===== SCREENS ===== */
+.screen {
+  position: absolute;
+  inset: 0;
+  display: none;
+  justify-content: center;
+  align-items: center;
+}
+
+.screen.active {
+  display: flex;
+}
+
+/* ===== GARDEN ===== */
+#gardenScreen {
+  align-items: flex-start;
+}
+
+#gardenArea {
+  position: relative;
+  width: 100%;
+  height: calc(100% - 300px); /* prevents overlap */
+  margin-top: 300px;
+}
+
+/* ===== ROSES ===== */
+.rose {
+  position: absolute;
+  font-size: 2.8rem;
+  cursor: pointer;
+  animation: float 4s ease-in-out infinite;
+  user-select: none;
+  filter: drop-shadow(0 0 6px rgba(255,120,160,.7));
+}
+
+.rose:active {
+  transform: scale(1.3);
+}
+
+/* ===== FLOATING PETALS ===== */
+.petal {
+  position: absolute;
+  font-size: 1.2rem;
+  animation: fall linear infinite;
+  opacity: .8;
+}
+
+@keyframes fall {
+  from { transform: translateY(-10vh); }
+  to { transform: translateY(110vh); }
+}
+
+/* ===== CARDS ===== */
+.card {
+border: 2px solid #C71585;
+  background:rgb(255, 255, 255);
+  backdrop-filter: blur(14px);
+  border-radius: 24px;
+  padding: 24px;
+  width: 85%;
+  max-width: 380px;
+  text-align: center;
+  animation: fadeUp .8s ease forwards;
+}
+
+/* ===== ANIMATIONS ===== */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(30px) scale(.96); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes float {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-18px); }
+  100% { transform: translateY(0); }
+}
+
+/* ===== BUTTONS ===== */
+button {
+  border: none;
+  border-radius: 30px;
+  padding: 12px 22px;
+  font-size: .9rem;
+  cursor: pointer;
+  margin-top: 15px;
+}
+
+.secondary {
+  background:rgb(255, 255, 255);
+  color: #C71585;
+  border: 2px solid #C71585;
+}
+
+/* ===== MUSIC BUTTON ===== */
+.music-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background:rgb(255, 255, 255);
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ===== DESKTOP ===== */
+@media (min-width: 768px) {
+  .hero-image { max-width: 480px; }
+}
+</style>
+</head>
+
+<body>
+
+<!-- 💗 HERO IMAGE -->
+<div class="hero-wrapper">
+  <div class="hero-image"></div>
+</div>
+
+<!-- 🌹 GARDEN -->
+<div id="gardenScreen" class="screen active">
+  <div id="gardenArea"></div>
+</div>
+
+<!-- ⏳ LOADER -->
+<div id="loaderScreen" class="screen">
+  <div class="card">Picking a rose just for you 🌹</div>
+</div>
+
+<!-- 💌 MESSAGE -->
+<div id="messageScreen" class="screen">
+  <div class="card">
+    <h2 id="toName"></h2>
+    <p id="msgText"></p>
+    <p id="fromName" style="opacity:.75;"></p>
+    <button class="secondary" id="againBtn">🔄 Pick Another Rose</button>
+  </div>
+</div>
+
+<!-- 🎵 MUSIC -->
+<audio id="bgMusic" loop>
+  <source src="https://github.com/piyushshahu123456789/Assets/raw/refs/heads/main/Tum%20Ho%20Toh%20Subah%20Nahi%20Hai%20Song.mp3" type="audio/mpeg">
+</audio>
+<button class="music-btn" onclick="toggleMusic()">🎵</button>
+
+<script>
+const senderName = "Piyush";
+const receiverName = "Dimple";
+
+const roseMessages = [
+  "You are the reason my heart smiles 🌹",
+  "If roses could talk, they'd say I adore you 💕",
+  "Some people feel like home -- you are mine 🤍",
+  "One rose for you, one smile for me 😉🌹",
+  "Every beat of my heart chooses you ❤️",
+  "Happy Rose Day, always blooming for you 🌸"
+];
+
+const garden = document.getElementById("gardenArea");
+const music = document.getElementById("bgMusic");
+
+function show(id) {
+  ["gardenScreen","loaderScreen","messageScreen"].forEach(s =>
+    document.getElementById(s).classList.remove("active")
+  );
+  document.getElementById(id).classList.add("active");
+}
+
+/* Roses */
+for (let i = 0; i < 8; i++) {
+  const r = document.createElement("div");
+  r.className = "rose";
+  r.textContent = "🌹";
+  r.style.left = Math.random()*85+"%";
+  r.style.top = Math.random()*85+"%";
+  r.style.animationDuration = 3+Math.random()*3+"s";
+  r.onclick = pickRose;
+  garden.appendChild(r);
+}
+
+/* Petals */
+setInterval(() => {
+  const p = document.createElement("div");
+  p.className = "petal";
+  p.textContent = "🌸";
+  p.style.left = Math.random()*100+"%";
+  p.style.animationDuration = 5+Math.random()*5+"s";
+  document.body.appendChild(p);
+  setTimeout(()=>p.remove(),10000);
+},800);
+
+function pickRose() {
+  show("loaderScreen");
+  const msg = roseMessages[Math.floor(Math.random()*roseMessages.length)];
+  setTimeout(() => {
+    document.getElementById("toName").innerText = "For "+receiverName+" 💗";
+    document.getElementById("msgText").innerText = msg;
+    document.getElementById("fromName").innerText = "-- "+senderName;
+    show("messageScreen");
+  },1500);
+}
+
+document.getElementById("againBtn").onclick = () => show("gardenScreen");
+
+function toggleMusic() {
+  music.paused ? music.play() : music.pause();
+}
+</script>
+
+</body>
+</html>
